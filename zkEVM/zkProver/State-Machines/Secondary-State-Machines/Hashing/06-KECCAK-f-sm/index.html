@@ -1,0 +1,1412 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A description of the Keccak-f State Machine.">
+      
+      
+      
+        <link rel="canonical" href="https://docs.hermez.io/zkEVM/zkProver/State-Machines/Secondary-State-Machines/Hashing/06-KECCAK-f-sm/">
+      
+      
+      
+      <link rel="icon" href="../../../../../../favicon.ico">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
+    
+    
+      
+        <title>Keccak-f State Machine - Hermez 1.0 Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../../assets/stylesheets/main.0d440cfe.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#keccak-f-state-machine" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../../../.." title="Hermez 1.0 Documentation" class="md-header__button md-logo" aria-label="Hermez 1.0 Documentation" data-md-component="logo">
+      
+  <img src="../../../../../../logo-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Hermez 1.0 Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Keccak-f State Machine
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/hermeznetwork/zkevmdoc" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../../Hermez_1.0/about/scalability/" class="md-tabs__link">
+        Hermez 1.0
+      </a>
+    </li>
+  
+
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../../../.." title="Hermez 1.0 Documentation" class="md-nav__button md-logo" aria-label="Hermez 1.0 Documentation" data-md-component="logo">
+      
+  <img src="../../../../../../logo-white.svg" alt="logo">
+
+    </a>
+    Hermez 1.0 Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hermeznetwork/zkevmdoc" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+          Hermez 1.0
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Hermez 1.0
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_1" id="__nav_1_1_label" tabindex="0">
+          About
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_1_1">
+          <span class="md-nav__icon md-icon"></span>
+          About
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/about/scalability/" class="md-nav__link">
+        Ethereum Scalability and zk-Rollups
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/about/value-proposition/" class="md-nav__link">
+        Hermez Value Proposition
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/about/model/" class="md-nav__link">
+        Hermez Network Model
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/about/security/" class="md-nav__link">
+        Security
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
+          Users
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_1_2">
+          <span class="md-nav__icon md-icon"></span>
+          Users
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/users/hermez-wallet/" class="md-nav__link">
+        Hermez Wallet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/users/mainnet/" class="md-nav__link">
+        Hermez Mainnet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/users/testnet/" class="md-nav__link">
+        Hermez Testnet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/users/exchanges/" class="md-nav__link">
+        Exchanges
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex="0">
+          Developers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_1_3">
+          <span class="md-nav__icon md-icon"></span>
+          Developers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/dev-guide/" class="md-nav__link">
+        Developer Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_3_2" id="__nav_1_3_2_label" tabindex="0">
+          Protocol
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_1_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Protocol
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_2_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_3_2_1" id="__nav_1_3_2_1_label" tabindex="0">
+          Hermez zkRollup protocol
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_1_3_2_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_1_3_2_1">
+          <span class="md-nav__icon md-icon"></span>
+          Hermez zkRollup protocol
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/protocol/hermez-protocol/protocol/" class="md-nav__link">
+        Core protocol
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/protocol/hermez-protocol/contracts/contracts/" class="md-nav__link">
+        Smart contracts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/protocol/hermez-protocol/circuits/circuits/" class="md-nav__link">
+        Circuits
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/protocol/consensus/consensus/" class="md-nav__link">
+        Forging consensus protocol
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/protocol/withdrawal-delayer/withdrawal-delayer/" class="md-nav__link">
+        Withdrawal delayer protocol
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/sdk/" class="md-nav__link">
+        Examples/SDK
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/api/" class="md-nav__link">
+        API
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/batch-explorer/" class="md-nav__link">
+        Batch Explorer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/price-updater/" class="md-nav__link">
+        Hermez NodePrice Updater
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/developers/glossary/" class="md-nav__link">
+        Glossary
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_4" id="__nav_1_4_label" tabindex="0">
+          FAQ
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_1_4">
+          <span class="md-nav__icon md-icon"></span>
+          FAQ
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/faq/end-users/" class="md-nav__link">
+        End-Users
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/faq/integrators/" class="md-nav__link">
+        Integrators
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/faq/coordinators/" class="md-nav__link">
+        Coordinators
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/faq/pod/" class="md-nav__link">
+        Proof of Donation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Hermez_1.0/faq/other/" class="md-nav__link">
+        Other
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#keccak-f-circuit" class="md-nav__link">
+    Keccak-f Circuit
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keccak-256-hash-function" class="md-nav__link">
+    KECCAK-256 Hash Function
+  </a>
+  
+    <nav class="md-nav" aria-label="KECCAK-256 Hash Function">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bitrate-and-capacity" class="md-nav__link">
+    Bitrate and Capacity
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keccak-f-padding-rule" class="md-nav__link">
+    KECCAK-f Padding Rule
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-keccak-f-internal-state" class="md-nav__link">
+    The Keccak-f Internal State
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-keccak-f-rounds" class="md-nav__link">
+    The KECCAK-f Rounds
+  </a>
+  
+    <nav class="md-nav" aria-label="The KECCAK-f Rounds">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-first-step-mapping-theta" class="md-nav__link">
+    The First Step Mapping \(\theta\)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-second-step-mapping-rho" class="md-nav__link">
+    The Second Step Mapping \(\rho\)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-third-step-mapping-pi" class="md-nav__link">
+    The Third Step Mapping \(\pi\)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-fourth-step-mapping-chi" class="md-nav__link">
+    The Fourth Step Mapping \(\chi\)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-fifth-step-mapping-iota" class="md-nav__link">
+    The Fifth Step Mapping \(\iota\)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generation-of-7-bits-for-round-constants" class="md-nav__link">
+    Generation of 7 Bits for Round-Constants
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="keccak-f-state-machine">Keccak-f State Machine</h1>
+<p>The Keccak-f State Machine (SM) is one of the secondary zkProver state machines. It computes hashes of message strings, and proves correctness of computation of these hashes, at the request of the Main SM.</p>
+<p>Although the original KECCAK hash function has a straight forward architecture, the Keccak-f SM is not a simplistically automated or state machine version of the cryptographic hash function.</p>
+<p>Firstly, the Keccak-f SM is implemented as a gates state machine. A binary circuit, operating on a bitwise basis.</p>
+<p>Secondly, as it relates to the Main SM, the Keccak-f SM is realised within a framework encompassing four other, supporting state machines; the Padding-KK SM, the Padding-KK-Bit SM and the Bits2Field SM.</p>
+<p>Thirdly, especially in the first version of the zkEVM public testnet, the Keccak-f circuit is implemented such that its single run is effectively equivalent to running forty-four (<span class="arithmatex">\(44\)</span>) hashing circuits at once. See the Bits2Field SM for further details on how this parallelism technique is enforced.</p>
+<p>This document contains a brief outline of the <span class="arithmatex">\(\texttt{Keccak-f}\)</span> circuit, and a detailed description of the known and standard Keccak-256 hash function, with specific parameters as used in the zkEVM implementation.</p>
+<h2 id="keccak-f-circuit">Keccak-f Circuit</h2>
+<p>The <span class="arithmatex">\(\texttt{Keccak-f}\)</span> circuit has two types of gates, types <span class="arithmatex">\(\mathtt{0}\)</span> and <span class="arithmatex">\(\mathtt{1}\)</span>, corresponding to the two binary operations it performs, the <span class="arithmatex">\(\mathtt{XOR}\)</span> and <span class="arithmatex">\(\mathtt{ANDP}\)</span>. </p>
+<p>The <span class="arithmatex">\(\texttt{Keccak-f}\)</span> executor builds the constant polynomials, <span class="arithmatex">\(\mathtt{ConnA}\)</span>, <span class="arithmatex">\(\mathtt{ConnB}\)</span> and <span class="arithmatex">\(\mathtt{ConnC}\)</span>, and these are to be tested if they match their corresponding polynomials, <span class="arithmatex">\(\mathtt{kA}\)</span>, <span class="arithmatex">\(\mathtt{kB}\)</span> and <span class="arithmatex">\(\mathtt{kC}\)</span>.</p>
+<p>Also, for any <span class="arithmatex">\(\texttt{op} \in \{ \mathtt{XOR}, \mathtt{ANDP} \}\)</span>  we have</p>
+<div class="arithmatex">\[
+\texttt{op} \big( \mathtt{ConnA}, \mathtt{ConnB}\big) = \mathtt{ConnC}, \text{ } \\ 
+\texttt{op} \big( \mathtt{kA}, \mathtt{kB} \big) = \mathtt{kC}
+\]</div>
+<p>The <span class="arithmatex">\(44\)</span> bits are loaded into the state machine as <span class="arithmatex">\(11\)</span>-bit chunks. </p>
+<p>In <span class="arithmatex">\(\texttt{keccakf.pil}\)</span>, each committed polynomial <span class="arithmatex">\(\texttt{a[4]}\)</span> is expressed in terms of 4 chunks, where each is <span class="arithmatex">\(11\)</span> bits long. The corresponding a <span class="arithmatex">\(44\)</span>-bit array can be expressed as, 
+$$
+\texttt{a44} = \texttt{a}[3] \cdot 2^{33} + \texttt{a}[2] \cdot 2^{22} + \texttt{a}[1] \cdot 2^{11} + \texttt{a}[0]
+$$
+where <span class="arithmatex">\(\texttt{a}[i]\)</span> for each <span class="arithmatex">\(i \in \{ 0, 1, 2, 3 \}\)</span>.  </p>
+<p>The verification involves a copy constraint</p>
+<div class="arithmatex">\[
+\mathtt{ \{ a44, b44, c44 \} }\ \texttt{connect}\ \mathtt{ \{ ConnA, ConnB, ConnC \} };
+\]</div>
+<p>and a Plook-up as,</p>
+<div class="arithmatex">\[
+\mathtt{ \{ GateType, a[i], b[i], c[i] \} }\ \texttt{in} \ \mathtt{ \{ kGateType, kA, kB, kC \} };
+\]</div>
+<p>for each <span class="arithmatex">\(i \in \{ 0, 1, 2, 3 \}\)</span>.</p>
+<p>This covers the <span class="arithmatex">\(\texttt{Keccak-f}\)</span> circuit in a nutshell together with its PIL code. See the codes <a href="https://github.com/0xPolygonHermez/zkevm-proverjs/blob/main/src/sm/sm_keccakf/sm_keccakf.js">sm_keccakf.js</a> and <a href="https://github.com/0xPolygonHermez/zkevm-proverjs/blob/main/pil/keccakf.pil">keccakf.pil</a>.</p>
+<h2 id="keccak-256-hash-function">KECCAK-256 Hash Function</h2>
+<p>There are seven <span class="arithmatex">\(\texttt{Keccak}\)</span>-<span class="arithmatex">\(f\)</span> permutation functions, each indicated by <span class="arithmatex">\(\texttt{Keccak}\)</span>-<span class="arithmatex">\(f[b]\)</span>, where <span class="arithmatex">\(b = 5\times 5\times 2^l\)</span> is the size of the internal state of the hash function, for <span class="arithmatex">\(0 \leq l \leq w\)</span>.</p>
+<p>The zkProver's KECCAK State Machine is a verifiable automisation of a <span class="arithmatex">\(\texttt{Keccak}\)</span>-<span class="arithmatex">\(f\)</span> permutation function, which amounts to an irreversible scrambling of bits of a string <span class="arithmatex">\(\mathbf{s} \in \mathbb{Z}_2^b\)</span>, where <span class="arithmatex">\(b = 5\times 5\times 2^6 = 1600\)</span>.</p>
+<p>The EVM utilises the KECCAK-256 hash function, which is a sponge construction with capacity <span class="arithmatex">\(c = 512\)</span> bits, and denoted by KECCAK<span class="arithmatex">\([512]\)</span>. That is, the KECCAK-256 notation puts emphasis on the <span class="arithmatex">\(256\)</span>-bit security level, while the KECCAK<span class="arithmatex">\([512]\)</span> notation seeks to depict the actual capacity of <span class="arithmatex">\(512\)</span> bits.</p>
+<h3 id="bitrate-and-capacity">Bitrate and Capacity</h3>
+<p>Although the internal state is <span class="arithmatex">\(\mathtt{1600}\)</span> bits, <span class="arithmatex">\(\texttt{Keccak}\)</span>-<span class="arithmatex">\(f\)</span> intakes a fixed number of bits as input, called the <span class="arithmatex">\(\texttt{bitrate}\)</span> (or simply, <span class="arithmatex">\(\texttt{rate}\)</span>) and it is denoted by <span class="arithmatex">\(\texttt{r}\)</span>. In our specific case, the bitrate <span class="arithmatex">\(\texttt{r} = 1088\)</span>, whilst the capacity, <span class="arithmatex">\(\texttt{c} = 512\)</span>.</p>
+<p>The size of a single output is  <span class="arithmatex">\(\texttt{r} = 1088\)</span> bits. However, users can choose their required length by truncating the output, which is of length <span class="arithmatex">\(\texttt{d}\)</span>, where <span class="arithmatex">\(\texttt{d} = 1088*k\)</span>, for some positive integer <span class="arithmatex">\(k\)</span>.</p>
+<p>The <span class="arithmatex">\(\texttt{Keccak}\)</span>-<span class="arithmatex">\(f\)</span> permutation used in KECCAK<span class="arithmatex">\([c]\)</span> is KECCAK-<span class="arithmatex">\(p[1600, 24]\)</span> (See <a href="https://csrc.nist.gov/publications/detail/fips/202/final">NIST SHA-3 Standard</a>).</p>
+<p>Thus, given an input bit string <span class="arithmatex">\(\mathtt{M}\)</span> and a output length <span class="arithmatex">\(\mathtt{d}\)</span>, KECCAK<span class="arithmatex">\([c](M, d)\)</span> outputs a <span class="arithmatex">\(d\)</span>-bit string following the previous sponge construction description. </p>
+<h3 id="keccak-f-padding-rule">KECCAK-f Padding Rule</h3>
+<p>The <span class="arithmatex">\(\texttt{Keccak}\)</span>-<span class="arithmatex">\(f\)</span> permutation operates on a state of width <span class="arithmatex">\(b = 1600\)</span> bits (or <span class="arithmatex">\(200\)</span> bytes) and a bitrate
+$$
+\mathtt{r = b - c = 1600 - 512 = 1088}\ \texttt{bits } \mathtt{= 136}\ \texttt{bytes}
+$$
+But not every input string comes with this tailored bit-length.</p>
+<p>Therefore, every input string is split into <span class="arithmatex">\(\mathtt{1088}\)</span>-bit chunks, where padding is applied to the tail-end chunk with <span class="arithmatex">\(\mathtt{1088}\)</span> bits or lesser.</p>
+<p>The last ingredient we need to define in order to completely specify the hash function is the padding rule. </p>
+<p>In KECCAK<span class="arithmatex">\([c]\)</span>, the padding <span class="arithmatex">\(\texttt{pad10*1}\)</span> is used. If we define <span class="arithmatex">\(\mathtt{j = (-m-2) \mod{r}}\)</span>, where <span class="arithmatex">\(\mathtt{m}\)</span> is the length of the input in bits, then the padding we have to append to the original input message is 
+$$
+\mathtt{P = 1 \mid\mid 0^{1088+j} \mid\mid 1}.
+$$</p>
+<p>It should be noted that our construction does <strong>not</strong> follow the FIPS-202 based standard (a.k.a SHA-3). According to the NIST specification, the SHA3 padding has been changed to</p>
+<div class="arithmatex">\[
+\mathtt{\text{SHA3-256}(M) = \text{KECCAK}[512](M \mid\mid 01, 256)}.
+\]</div>
+<p>The difference is the additional <span class="arithmatex">\(\mathtt{01}\)</span> bits being appended to the original message, which were not present in the orignal KECCAK specification.</p>
+<h2 id="the-keccak-f-internal-state">The Keccak-f Internal State</h2>
+<p>The <span class="arithmatex">\(\mathtt{1088}\)</span>-bit (post-padding) chunks are provided sequentially, and one chunk at a time, into the <span class="arithmatex">\(\texttt{Keccak}\)</span>-<span class="arithmatex">\(f\)</span> permutation function, to be <span class="arithmatex">\(\texttt{XOR}\)</span>ed with a given initialisation vector <span class="arithmatex">\(\texttt{IV}\)</span> or intermediate states. The capacity bits are typically initialised to zero bits and are not affected by any external bits.</p>
+<p>However, instead of a plain bit-string of length <span class="arithmatex">\(\mathtt{1600}\)</span> bits, a state <span class="arithmatex">\(\mathbf{s}\)</span> in the KECCAK SM is best visualised in 3D form as follows;</p>
+<ul>
+<li>Firstly, each bit is imagined as a cube,</li>
+<li>Secondly, the entire <span class="arithmatex">\(\mathtt{1600}\)</span>-bit state is thought of as a 3-dimensional array of cubes (bits): <span class="arithmatex">\(\text{A}[5][5][64]\)</span>. That is, sixty-four (<span class="arithmatex">\(5 \text{-bit}\times 5\text{-bit}\)</span>)-blocks of bits (cubes).</li>
+</ul>
+<p>See Figure 1 below, for a <span class="arithmatex">\(\mathtt{1600}\)</span>-bit state array, displaying;</p>
+<p>(a) The 64-bit lane <span class="arithmatex">\(\{[3,2,z]\}\)</span> shown in orange, consisting of <span class="arithmatex">\(64\)</span> bits, <span class="arithmatex">\(\mathtt{Bit}[3,2,0]\)</span> to <span class="arithmatex">\(\mathtt{Bit}[3,2,63]\)</span>, and</p>
+<p>(b) The 5-bit column <span class="arithmatex">\(\{[2,y,63]\}\)</span> shown in green, consisting of <span class="arithmatex">\(5\)</span> bits, <span class="arithmatex">\(\mathtt{Bit}[2,0,63]\)</span> to <span class="arithmatex">\(\mathtt{Bit}[2,4,63]\)</span>. </p>
+<p><img alt="Figure 1: Keccak's 1600-bit State as a 3D Array" src="../figures/01kkf-state-array-calibrated.png" /></p>
+<div align="center"><b>  Figure 1: Keccak's 1600-bit State as a 3D Array </b></div>
+
+<p>A bit in the state <span class="arithmatex">\(\mathbf{s}\)</span> can be denoted by <span class="arithmatex">\(\texttt{Bit}[x][y][z]\)</span> as an element of the 3D-array state, but as <span class="arithmatex">\(\texttt{Bit}[x,y,z]\)</span> to indicate its location in position <span class="arithmatex">\((x,y,z)\)</span> with respect to the Catersian coordinate system.</p>
+<p>The mapping between the bits of the state <span class="arithmatex">\(\mathbf{s}\)</span>, when written as a linear array of <span class="arithmatex">\(\mathtt{1600}\)</span> bits, and the bits when <span class="arithmatex">\(\mathbf{s}\)</span> is expressed as a 3-dimesnional array, is given by,
+$$
+\mathbf{s}[64(5y + x) + z] \mapsto \mathtt{Bit}[x,y,z]
+$$
+So then, the bit <span class="arithmatex">\(\mathtt{a} = \mathtt{Bit}[2,3,3]\)</span> at coordinate <span class="arithmatex">\((2,3,3)\)</span> is in fact the one-thousand-and-ninety-second bit of <span class="arithmatex">\(\mathbf{s}\)</span>, because <span class="arithmatex">\(64(5\cdot 3 + 2) + 3 = 64(17) + 3 = 1091\)</span>. This bit, <span class="arithmatex">\(\mathtt{a} = \mathtt{Bit}[2,3,3]\)</span>, is represented in Figure 1 above, by the blue cube. See more examples of this correspondence in Table 1, below.</p>
+<div align="center"><b>  Table 1: Mapping Linear State to the 3D-Array </b></div>
+
+<div class="arithmatex">\[
+\small
+\begin{array}{|l|c|c|c|c|c|}
+\hline
+\textbf{x} &amp; \textbf{y} &amp; \textbf{z} &amp; \textbf{s[ 64x + 320y + z]} &amp; \textbf{Bit}\textbf{[x,y,z]} &amp; \textbf{Cube Colour in Fig.1.} \\ \hline
+\mathtt{0} &amp; \mathtt{0} &amp; \mathtt{0} &amp; \mathtt{s[64\cdot 0 + 320\cdot 0 + 0]} = \mathtt{s[0]\ }\ \ \ \text{ }\text{ }   &amp; \mathtt{Bit[0,0,0]}\text{ }\text{ } &amp; \texttt{Yellow} \\ \hline
+\mathtt{2} &amp; \mathtt{2} &amp; \mathtt{4} &amp;  \mathtt{s[64\cdot 2 + 320\cdot 2 + 4]} = \mathtt{s[772]}\ \text{ } &amp; \mathtt{Bit[2,2,4]}\text{ }\text{ } &amp; \texttt{Red} \\ \hline
+\mathtt{2} &amp; \mathtt{3} &amp; \mathtt{3} &amp; \text{ } \mathtt{s[64\cdot 2 + 320\cdot 3 + 3]} = \mathtt{s[1091]}\text{ } &amp; \mathtt{Bit[2,3,3]}\text{ }\text{ } &amp; \texttt{Blue} \\ \hline
+\mathtt{0} &amp; \mathtt{2} &amp; \mathtt{3} &amp; \mathtt{s[64\cdot 0 + 320\cdot 2 + 3]} = \mathtt{s[643]}\text{ }\text{ }  &amp; \mathtt{Bit[0,2,3]}\text{ }\text{ } &amp; \texttt{Purple} \\ \hline
+\mathtt{2} &amp; \mathtt{2} &amp; \mathtt{63} &amp; \text{ } \mathtt{s[64\cdot 2 + 320\cdot 2 + 63]} = \mathtt{s[831]}\text{ } &amp; \mathtt{Bit[2,2,63]} &amp; \texttt{Green} \\ \hline
+\mathtt{2} &amp; \mathtt{1} &amp; \mathtt{63} &amp; \text{ } \mathtt{s[64\cdot 2 + 320\cdot 1 + 63]} = \mathtt{s[511]}\text{ } &amp; \mathtt{Bit[2,1,63]}  &amp; \texttt{Green} \\ \hline
+\mathtt{2} &amp; \mathtt{0} &amp; \mathtt{63} &amp; \text{ } \mathtt{s[64\cdot 2 + 320\cdot 0 + 63]} = \mathtt{s[191]} \text{ } &amp; \mathtt{Bit[2,0,63]} &amp; \texttt{Green} \\ \hline
+\mathtt{2} &amp; \mathtt{4} &amp; \mathtt{63} &amp; \text{ }\text{ } \mathtt{s[64\cdot 2 + 320\cdot 4 + 63]} = \mathtt{s[1471]} &amp; \mathtt{Bit[2,4,63]} &amp; \texttt{Green} \\ \hline
+\mathtt{2} &amp; \mathtt{3} &amp; \mathtt{63} &amp; \text{ }\text{ } \mathtt{s[64\cdot 2 + 320\cdot 3 + 63]} = \mathtt{s[1151]} &amp; \mathtt{Bit[2,3,63]} &amp; \texttt{Green} \\ \hline
+\end{array}
+\]</div>
+<p>Consider computing the <span class="arithmatex">\(\texttt{XOR}\)</span> of all the 5 bits in the column <span class="arithmatex">\(\{[2,y,63]\}\)</span> , the green column of Figure 1 above. If its bits are as given below,
+$$
+\mathtt{Bit[2,2,63]} = 1,\ \mathtt{Bit[2,1,63]} = 1,\ \mathtt{Bit[2,0,63]} = 0,\ \mathtt{Bit[2,4,63]} = 0\ \text{ and }\ \mathtt{Bit[2,3,63]} = 1
+$$
+then the <span class="arithmatex">\(\texttt{XOR}\)</span> of the column bits, denoted by <span class="arithmatex">\(C[2,63]\)</span>, is <span class="arithmatex">\(C[2,63] = 1 \oplus 1 \oplus 0 \oplus 0 \oplus 1 = 1\)</span>.</p>
+<p>In our notation, a column is identified by the fixed <span class="arithmatex">\(x\)</span>- and <span class="arithmatex">\(z\)</span>- values. Hence the <span class="arithmatex">\(\texttt{XOR}\)</span> of all the 5 bits in a column is denoted by <span class="arithmatex">\(\mathtt{C[x,z]}\)</span>. That is, 
+$$
+\mathtt{C[x,z]} = \mathtt{Bit[x,0,z]} \oplus \mathtt{Bit[x,1,z]} \oplus \mathtt{Bit[x,2,z]}  \oplus \mathtt{Bit[x,3,z]}  \oplus \mathtt{Bit[x,4,z]}
+$$</p>
+<h2 id="the-keccak-f-rounds">The KECCAK-f Rounds</h2>
+<p>The <span class="arithmatex">\(\texttt{Keccak}\)</span>-<span class="arithmatex">\(f\)</span> State Machine runs 24 rounds, each of which is but a composition of five step mappings; <span class="arithmatex">\(\mathtt{\theta}\)</span>, <span class="arithmatex">\(\mathtt{\rho}\)</span>,  <span class="arithmatex">\(\mathtt{\pi}\)</span>,  <span class="arithmatex">\(\mathtt{\chi}\)</span> and <span class="arithmatex">\(\mathtt{\iota}\)</span>, denoted by<br />
+$$
+\texttt{Rnd(A, ir)} = ι( χ( π( ρ( θ(A) ) ) ), \mathtt{ir})
+$$
+where <span class="arithmatex">\(\texttt{ir}\)</span> is the round index, and in our case, <span class="arithmatex">\(0 \leq \texttt{ir} \leq 23\)</span>.</p>
+<p>These step mappings are individually described in the subsections below. The following table illustrates how the output state of each step mapping is relayed to the next step mapping as its input state.</p>
+<div align="center"><b>  Table 2: Composition of the Step Mappings </b></div>
+
+<div class="arithmatex">\[
+\small
+\begin{array}{|l|c|c|c|c|c|}
+\hline
+\textbf{Pseudo-code of the Composition} &amp; \textbf{The keccak\_f.cpp Code}\\ \hline 
+\text{Run a *for-loop* over bits in a 25-bit slice of the state } \texttt{S} &amp; \texttt{for} \mathtt{(uint64\_t\ \ ir=0; ir&lt;24; ir++ )}\\ \hline
+\text{ } &amp;\{ \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\\ \hline
+\text{Apply step mapping } \theta \text{ on current state}\texttt{ S} &amp;\text{ } \mathtt{KeccakTheta(S, ir);} \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ } \\ \hline 
+\text{Copy output of } \theta \text{ and set it as an input state of  } \rho  &amp; \text{ } \mathtt{S.copySoutRefsToSinRefs();} \\ \hline 
+\text{Apply step mapping } \rho \text{ to the input state. } &amp; \text{ } \mathtt{KeccakRho(S);} \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ } \\ \hline 
+\text{Copy output of } \rho \text{ and set it as an input state of  } \pi &amp; \text{ } \mathtt{S.copySoutRefsToSinRefs();} \\ \hline 
+\text{Apply step mapping } \pi \text{ to the input state.} &amp; \text{ } \mathtt{KeccakPi(S);} \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ } \\ \hline 
+\text{Copy output of } \pi \text{ and set it as an input state of  } \chi  &amp; \text{ } \mathtt{S.copySoutRefsToSinRefs();} \\ \hline 
+\text{Apply step mapping } \chi \text{ to the input state.} &amp; \text{ } \mathtt{KeccakChi(S);} \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ } \\ \hline 
+\text{Copy output of } \chi \text{ and set it as an input state of  } \iota  &amp; \text{ } \mathtt{S.copySoutRefsToSinRefs();} \\ \hline 
+\text{Apply step mapping } \iota \text{ to the input state.} &amp; \text{ } \mathtt{KeccakIota(S);} \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ } \\ \hline 
+\text{Set output of } \iota \text{ as new state, and reset to } 0 \text{ for next round } &amp; \text{ } \mathtt{S.copySoutRefsToSinRefs();} \\ \hline
+\text{ } &amp;\} \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\\ \hline
+\end{array}
+\]</div>
+<p>Henceforth, given a state value, the next value of the bit <span class="arithmatex">\(\text{A}[x,y,z]\)</span> is denoted by <span class="arithmatex">\(\text{A}'[x,y,z]\)</span>. The code shown on the right side of Table 2 is <a href="https://github.com/0xPolygonHermez/zkevm-prover/blob/main/tools/sm/keccak_f/keccak_f.cpp">keccakf.cpp</a>.</p>
+<h3 id="the-first-step-mapping-theta">The First Step Mapping <span class="arithmatex">\(\theta\)</span></h3>
+<p>The first step mapping, <span class="arithmatex">\(\mathtt{\theta}\)</span>, referred to as <span class="arithmatex">\(\texttt{KeccakTheta()}\)</span> in <a href="https://github.com/0xPolygonHermez/zkevm-prover/blob/main/tools/sm/keccak_f/keccak_f.cpp">keccak_f.cpp</a>, can be described in three sub-steps;</p>
+<p><strong><em>Firstly</em></strong>, compute the <span class="arithmatex">\(\mathtt{XOR}\)</span> of the bits in the <span class="arithmatex">\([(x-1)\text{ mod }5, z]\)</span>-column,</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathtt{C[(x-1)\text{ mod }5, z]  = } \text{  } \mathtt{Bit[(x-1)\text{ mod }5,0,z]} \oplus\\ \mathtt{Bit[(x-1)\text{ mod }5,1,z]} \oplus\\ 
+\mathtt{Bit[(x-1)\text{ mod }5,2,z]} \oplus\\
+\mathtt{Bit[(x-1)\text{ mod }5,3,z]} \oplus\\ 
+\mathtt{Bit[(x-1)\text{ mod }5,0,z]}\text{ }\text{ }\text{ }  
+\end{aligned}
+\]</div>
+<p>and the <span class="arithmatex">\(\mathtt{XOR}\)</span> of the bits in the <span class="arithmatex">\([(x+1)\text{ mod }5, (z-1)\text{ mod }64]\)</span>-column,</p>
+<div class="arithmatex">\[
+\begin{aligned}
+\mathtt{C[(x+1)\text{ mod }5, (z-1)\text{ mod } 64] =\text{ }}
+\mathtt{Bit[(x+1)\text{ mod }5,0,(z-1)\text{ mod } 64]} \oplus \\
+\mathtt{Bit[(x+1)\text{ mod }5,1,(z-1)\text{ mod } 64]}\text{ }\oplus\\
+\mathtt{Bit[(x+1)\text{ mod }5,2,(z-1)\text{ mod } 64]}\text{ } \oplus\\ 
+\mathtt{Bit[(x+1)\text{ mod }5,3,(z-1)\text{ mod } 64]}\text{ }\oplus\\
+\mathtt{Bit[(x+1)\text{ mod }5,0,(z-1)\text{ mod } 64]}\quad
+\end{aligned}
+\]</div>
+<p><strong><em>Secondly</em></strong>, calculate the <span class="arithmatex">\(\mathtt{XOR}\)</span> of the two column <span class="arithmatex">\(\mathtt{XOR}\)</span>s;</p>
+<div class="arithmatex">\[
+\mathtt{D[x,z]\text{ } =}\text{ } \mathtt{C[(x-1)\text{ mod }5, z]\text{ } \oplus\text{ } {C}[(x+1)\text{ mod }5, (z-1)\text{ mod } 64]}
+\]</div>
+<p><strong><em>Thirdly</em></strong>, compute the <span class="arithmatex">\(\mathtt{XOR}\)</span> of <span class="arithmatex">\(\mathtt{D[x,z]}\)</span> and the bit <span class="arithmatex">\(\mathtt{A[x,y,z]}\)</span> of the current state value;</p>
+<p>$$
+\mathtt{A'[x,y,z] = {A}[x,y,z] \oplus {D}[x,z]}
+$$
+See Figure 2 below, for an illustration of the <span class="arithmatex">\(\theta\)</span> step mapping applied on one bit. (The diagram is taken from <a href="https://keccak.team/files/Keccak-reference-3.0.pdf">Keccak Reference 3.0</a>.)</p>
+<p>The code of the <span class="arithmatex">\(\theta\)</span> step mapping is found here <a href="https://github.com/0xPolygonHermez/zkevm-prover/blob/main/tools/sm/keccak_f/keccak_theta.cpp">keccak_theta.cpp</a>.</p>
+<p><img alt="Figure 2: Theta Step Mapping On One Bit" src="../figures/02kkf-theta-map-one-bit.png" /></p>
+<div align="center"><b> Figure 2: The Theta Step Mapping On One Bit </b></div>
+
+<h3 id="the-second-step-mapping-rho">The Second Step Mapping <span class="arithmatex">\(\rho\)</span></h3>
+<p>The step mapping <span class="arithmatex">\(\rho\)</span> does not change the value of the input bit, but simply moves it to another position along the <span class="arithmatex">\(z\)</span>-axis. Since all operations along the <span class="arithmatex">\(z\)</span>-axis are worked out <em>modulo</em> 64, the mapping <span class="arithmatex">\(\rho\)</span> is therefore cyclic, and amounts to rotating each of the 64 bits in the same lane along the <span class="arithmatex">\(z\)</span>-axis. It does this in three sub-steps;</p>
+<ol>
+<li>Set <span class="arithmatex">\(\mathtt{(x,y) = (0,1)}\)</span>,</li>
+<li>For  <span class="arithmatex">\(t\)</span>  ranging from <span class="arithmatex">\(0\)</span> to <span class="arithmatex">\(23\)</span>, set <span class="arithmatex">\(\mathtt{{A}'[x,y,z] = {A}\big[x,y,\big(z-(t+1)(t+2)/2 \big)\text{mod }64\big]}\)</span>,</li>
+<li>Set <span class="arithmatex">\(\mathtt{(x,y) = (y,(2x + 3y)\text{mod }5)}\)</span>.</li>
+</ol>
+<p>Basically, <span class="arithmatex">\(\rho\)</span> modifies the <span class="arithmatex">\(z\)</span> coordinate of each bit, <span class="arithmatex">\(\mathtt{Bit}[x,y,z]\)</span>, by subtracting a specific offset constant <span class="arithmatex">\(\mathbf{K}\)</span> <em>modulo</em> 64, where <span class="arithmatex">\(\mathbf{K} = (t+1)(t+2)/2\)</span>. See Table 3 for these offset constants used for rotation.</p>
+<div align="center"><b>  Table 3: The Offset Constants (computed from 't') </b></div>
+
+<div class="arithmatex">\[
+\begin{array}{|l|c|c|c|c|c|c|}
+\hline
+\mathbf{t} &amp; \mathbf{K} &amp; \mathbf{K} \textbf{ mod } \mathbf{64} &amp; \text{} &amp; \mathbf{t} &amp; \mathbf{K} &amp; \mathbf{K} \textbf{ mod } \mathbf{64} \\ \hline
+0 &amp; 1 &amp; 1 &amp; \text{} &amp; 12 &amp; 91 &amp; 27 \\ \hline
+1 &amp; 3 &amp; 3 &amp; \text{} &amp; 13 &amp; 105 &amp; 41 \\ \hline
+2 &amp; 6 &amp; 6 &amp; \text{} &amp; 14 &amp; 120 &amp; 56 \\ \hline
+3 &amp; 10 &amp; 10 &amp; \text{} &amp; 15 &amp; 136 &amp; 8 \\ \hline
+4 &amp; 15 &amp; 15 &amp; \text{} &amp; 16 &amp; 153 &amp; 25 \\ \hline
+5 &amp; 21 &amp; 21 &amp; \text{} &amp; 17 &amp; 171 &amp; 43 \\ \hline
+6 &amp; 28 &amp; 28 &amp; \text{} &amp; 18 &amp; 190 &amp; 62 \\ \hline
+7 &amp; 36 &amp; 36 &amp; \text{} &amp; 19 &amp; 210 &amp; 18 \\ \hline
+8 &amp; 45 &amp; 45 &amp; \text{} &amp; 20 &amp; 231 &amp; 39 \\ \hline
+9 &amp; 55 &amp; 55 &amp; \text{} &amp; 21 &amp; 253 &amp; 61 \\ \hline
+10 &amp; 66 &amp; 2 &amp; \text{} &amp; 22 &amp; 276 &amp; 20 \\ \hline
+11 &amp; 78 &amp; 14 &amp; \text{} &amp; 23 &amp; 300 &amp; 44 \\ \hline
+\end{array}
+\]</div>
+<p>The 24 constants in Table 3 above, are first permuted and then set as fixed offsets corresponding to each bit of the 3D state array, as shown in the Table 4.</p>
+<div align="center"><b> Table 4: Permuted and Fixed Offset Constants </b></div>
+
+<div class="arithmatex">\[
+\begin{array}{|l|c|c|c|c|c|c|}
+\hline
+\texttt{y}\Big{\\} \texttt{x} &amp; 3 &amp; 4 &amp; 0 &amp; 1 &amp; 2\\ \hline
+2 &amp; 25 &amp; 39 &amp; 3 &amp; 10 &amp; 43\\ \hline
+1 &amp; 55 &amp; 20 &amp; 36 &amp; 44 &amp; 6\\ \hline
+0 &amp; 28 &amp; 27 &amp; 0 &amp; 1 &amp; 62\\ \hline
+4 &amp; 56 &amp; 14 &amp; 18 &amp; 2 &amp; 61\\ \hline
+3 &amp; 21 &amp; 8 &amp; 41 &amp; 45 &amp; 15\\ \hline
+\end{array}
+\]</div>
+<p>Note that all bits <span class="arithmatex">\(\mathtt{Bit[x,y,z]}\)</span> such that <span class="arithmatex">\(\mathtt{x = 0}\)</span> and <span class="arithmatex">\(\mathtt{y = 0}\)</span> correspond to a zero offset constant. Consequently, the origin <span class="arithmatex">\(\mathtt{Bit}[0,0,0]\)</span> and all the other 63 bits along the <span class="arithmatex">\(\{\mathtt{Bit[0,0,z]}\}\)</span> lane remain unmoved by <span class="arithmatex">\(\rho\)</span>.</p>
+<p>Although the effect of <span class="arithmatex">\(\rho\)</span> is a rotation of bits along the <span class="arithmatex">\(z\)</span>-axis, it actually operates on each 25-bit <span class="arithmatex">\((x,y)\)</span>-slice of the state 3D-array. Hence the 25 offset constants (and not 64), including the zero offset of the origin lane <span class="arithmatex">\(\{\mathtt{Bit[0,0,z]}\}\)</span>.</p>
+<p><strong>Example.</strong> </p>
+<p>Here's an example of how <span class="arithmatex">\(\rho\)</span> maps two different lanes, using Table 4.</p>
+<p>(a) For all <span class="arithmatex">\(z\)</span>, where <span class="arithmatex">\(0\leq z\leq63\)</span>, the bits <span class="arithmatex">\(\{\mathtt{Bit}[2,4,z]\}\)</span> are always off-set by <span class="arithmatex">\(61\)</span> and mapped as follows, 
+$$
+\rho\big(\mathtt{Bit}[2,4,z]\big) \mapsto \mathtt{Bit}[4,1,(z-61)\text{mod }64]
+$$
+(b) Similarly, the bits <span class="arithmatex">\(\{\mathtt{Bit}[4,1,z]\}\)</span> are always off-set by <span class="arithmatex">\(20\)</span> and mapped as follows,
+$$
+\rho\big(\mathtt{Bit}[4,1,z]\big) \mapsto \mathtt{Bit}[1,1,(z-20)\text{mod }64]
+$$</p>
+<p>The code of the <span class="arithmatex">\(\rho\)</span> step mapping is found here <a href="https://github.com/0xPolygonHermez/zkevm-prover/blob/main/tools/sm/keccak_f/keccak_rho.cpp">keccak_rho.cpp</a>.</p>
+<h3 id="the-third-step-mapping-pi">The Third Step Mapping <span class="arithmatex">\(\pi\)</span></h3>
+<p>The step mapping <span class="arithmatex">\(\pi\)</span> is literally a shuffle of the 25 bits in each <span class="arithmatex">\((x,y)\)</span>-slice. For each <span class="arithmatex">\(z\)</span>, where <span class="arithmatex">\(0\leq z\leq63\)</span>, it is defined as the mapping,
+$$
+\pi\big(\mathtt{Bit}[x,y,z]\big) \mapsto \mathtt{Bit}[(x+3y)\text{mod }5,x,z]
+$$</p>
+<p>Note that <span class="arithmatex">\(\pi\)</span> fixes each of the bits <span class="arithmatex">\(\{\mathtt{Bit}[0,0,z]\}\)</span>, including the bit at the origin, <span class="arithmatex">\(\mathtt{Bit}[0,0,0]\)</span>. Also, for all bits in the 3D-array, <span class="arithmatex">\(\pi\)</span> does not change the <span class="arithmatex">\(z\)</span>-component. That is, all bits remain in their original <span class="arithmatex">\((x,y)\)</span>-slice. To this extend, it suffices to describe <span class="arithmatex">\(\pi\)</span> in terms of the images of the <span class="arithmatex">\((x,y)\)</span> pairs alone, as in Table 5 below.</p>
+<div align="center"><b> Table 5: KeccakPi in terms of its (x,y)-images </b></div>
+
+<div class="arithmatex">\[
+\begin{array}{|l|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\mathbf{(x,y)} &amp; \mathbf{x+3y} &amp; \mathbf{(x+3y)}\textbf{mod }\mathbf{5} &amp; \mathbf{\pi(x,y)} &amp; \text{} &amp; \mathbf{(x,y)} &amp; \mathbf{x+3y} &amp; \mathbf{(x+3y)}\textbf{mod }\mathbf{5} &amp; \mathbf{\pi(x,y)}\\ \hline
+(2,2) &amp; 8 &amp; 3 &amp; (3,2) &amp; \text{} &amp; (3,4) &amp; 15 &amp; 0 &amp; (0,3) \\ \hline
+(1,1) &amp; 4 &amp; 4 &amp; (4,1) &amp; \text{} &amp; (1,3) &amp; 10 &amp; 0 &amp; (0,1) \\ \hline
+(4,4) &amp; 16 &amp; 1 &amp; (1,4) &amp; \text{}  &amp; (4,2) &amp; 10 &amp; 0 &amp; (0,4) \\ \hline
+(3,3) &amp; 12 &amp; 2 &amp; (2,3) &amp; \text{} &amp; (2,1) &amp; 5 &amp; 0 &amp; (0,2) \\ \hline
+(3,0) &amp; 3 &amp; 3 &amp; (3,3) &amp; \text{} &amp; (1,2) &amp; 7 &amp; 2 &amp; (2,1) \\ \hline
+(4,0) &amp; 4 &amp; 4 &amp; (4,4) &amp; \text{} &amp; (2,4) &amp; 14 &amp; 4 &amp; (4,2)  \\ \hline
+(1,0) &amp; 1 &amp; 1 &amp; (1,1) &amp; \text{} &amp; (3,1) &amp; 6 &amp; 1 &amp; (1,3) \\ \hline
+(2,0) &amp; 2 &amp; 2 &amp; (2,2) &amp; \text{} &amp; (4,3) &amp; 13 &amp; 3 &amp; (3,4) \\ \hline
+(0,2) &amp; 6 &amp; 1 &amp; (1,2) &amp; \text{} &amp; (3,2) &amp; 9 &amp; 4 &amp; (4,3) \\ \hline
+(0,1) &amp; 3 &amp; 3 &amp; (3,0) &amp; \text{} &amp; (4,1) &amp; 7 &amp; 2 &amp; (2,4) \\ \hline
+(0,4) &amp; 12 &amp; 2 &amp; (2,0) &amp; \text{} &amp; (1,4) &amp; 13 &amp; 3 &amp; (3,1) \\ \hline
+(0,3) &amp; 9 &amp; 4 &amp; (4,0) &amp; \text{} &amp; (2,3) &amp; 11 &amp; 1 &amp; (1,2) \\ \hline
+\end{array}
+\]</div>
+<p>Figure 3 below, showing the <span class="arithmatex">\((x,y)\)</span>-slices, depicts the shuffling of the bits in accordance with Table 5. Figure 3 is in fact the mapping displayed in Figure 2.3 of the <a href="https://keccak.team/files/Keccak-reference-3.0.pdf">Keccak Reference 3.0 [Page 20; 2011]</a>.</p>
+<p><img alt="Figure 3: How Pi shuffles bits on a 25-bit (x,y)-slice" src="../figures/03kkf-pi-stepmap-shuffle.png" /></p>
+<div align="center"><b> Figure 3: How KeccakPi() shuffles bits on a 25-bit (x,y)-slice </b></div>
+
+<p>The code of the <span class="arithmatex">\(\pi\)</span> step mapping is found here <a href="https://github.com/0xPolygonHermez/zkevm-prover/blob/main/tools/sm/keccak_f/keccak_pi.cpp">keccak_pi.cpp</a>.</p>
+<h3 id="the-fourth-step-mapping-chi">The Fourth Step Mapping <span class="arithmatex">\(\chi\)</span></h3>
+<p>The <span class="arithmatex">\(\chi\)</span> step mapping is the non-linear layer of <span class="arithmatex">\(\texttt{Keccak}\)</span>-<span class="arithmatex">\(f\)</span>, and it can be thought of as a parallel application of <span class="arithmatex">\(320 = 5*64\)</span> S-boxes operating on <span class="arithmatex">\(5\)</span>-bit rows.</p>
+<p><strong>Here's how <span class="arithmatex">\(\chi\)</span> operates on rows</strong>. For a fixed <span class="arithmatex">\(y = b\)</span> and <span class="arithmatex">\(z = c\)</span>, the <span class="arithmatex">\(\chi\)</span> step mapping takes as its input the <span class="arithmatex">\(5\)</span>-bit row,
+$$
+\mathbf{Row}[b,c] = \Big(\mathtt{Bit}[3,b,c],\mathtt{Bit}[4,b,c],\mathtt{Bit}[0,b,c],\mathtt{Bit}[1,b,c],\mathtt{Bit}[2,b,c]\Big)
+$$
+It then computes a non-linear combination of each bit <span class="arithmatex">\(\mathtt{Bit}[x,b,c]\)</span> in <span class="arithmatex">\(\mathbf{Row}[b,c]\)</span>, with the next two consecutive bits <span class="arithmatex">\(\mathtt{Bit}[(x+1)\text{mod }5,b,c]\)</span> and <span class="arithmatex">\(\mathtt{Bit}[(x+2)\text{mod }5,b,c]\)</span> also in <span class="arithmatex">\(\mathbf{Row}[b,c]\)</span>, as follows;</p>
+<p>​   In order to change the bit, <span class="arithmatex">\(\mathtt{Bit}[x,b,c]\)</span>,</p>
+<p>(a) <span class="arithmatex">\(\chi\)</span> takes <span class="arithmatex">\(\mathtt{Bit}[(x+1)\text{mod }5,b,c]\)</span> as input to a <span class="arithmatex">\(\texttt{NOT}\)</span>-gate.</p>
+<p>(b) Then takes the output, <span class="arithmatex">\(\texttt{NOT}\big(\mathtt{Bit}[(x+1)\text{mod }5,b,c]\big)\)</span>, together with <span class="arithmatex">\(\mathtt{Bit}[(x+2)\text{mod }5,b,c]\)</span>, as inputs to an <span class="arithmatex">\(\texttt{AND}\)</span>-gate.</p>
+<p>(c) Finally, it XORes the output of the <span class="arithmatex">\(\texttt{AND}\)</span>-gate with the bit being changed, <span class="arithmatex">\(\mathtt{Bit}[x,b,c]\)</span>.</p>
+<p>That is, for each 5-bit row, <span class="arithmatex">\(\mathbf{Row}[b,c]\)</span>,  <span class="arithmatex">\(\chi\)</span> can be summarised as the mapping of each bit, <span class="arithmatex">\(\mathtt{Bit}[x,b,c]\)</span>, as;
+$$
+\chi : \mathtt{Bit}[x,b,c] \mapsto \Big(\big(\texttt{NOT}\big(\mathtt{Bit}[(x+1)\text{mod }5,b,c]\big) \big) \texttt{ AND }\big(\mathtt{Bit}[(x+2)\text{mod }5]\big)\Big)\ \oplus\ \mathtt{Bit}[x,b,c]
+$$
+where  <span class="arithmatex">\(x \in \{3,4,0,1,2\}\)</span>.  </p>
+<p>All-in-all, the <span class="arithmatex">\(\chi\)</span> step mapping can be depicted as a 'circuit' of gates as in Figure 4 below, taken from <a href="&quot;SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions&quot;, https://csrc.nist.gov/publications/detail/fips/202/final">FIPS PUB 202, August 2015 (i.e., Figure 6, on Page15)</a>.</p>
+<p><img alt="Figure 4: The KeccakChi Gates Circuit" src="../figures/04kkf-chi-map-5bit-row.png" /></p>
+<div align="center"><b> Figure 4: The KeccakChi Gates Circuit </b></div>
+
+<p>The code of the <span class="arithmatex">\(\chi\)</span> step mapping is found here <a href="https://github.com/0xPolygonHermez/zkevm-prover/blob/main/tools/sm/keccak_f/keccak_chi.cpp">keccak_chi.cpp</a>.</p>
+<h3 id="the-fifth-step-mapping-iota">The Fifth Step Mapping <span class="arithmatex">\(\iota\)</span></h3>
+<p>The <span class="arithmatex">\(\large{\iota}\)</span> step mapping adds 64-bit round-constants, <span class="arithmatex">\(RC[ir]\)</span>, so as to disrupt any symmetry in the computation of the round outputs. Note that <span class="arithmatex">\(ir\)</span> is the round index, <span class="arithmatex">\(0\leq ir \leq 23\)</span>. Hence, 24 distinct round-constants are required, and are denoted in array notation as, 
+$$
+{RC[ir][z]\ |\ 0\leq ir \leq 23 \text{ and } 0\leq z \leq 63 }
+$$
+The round-constants are XORed only to a single lane of the state, in particular, the origin lane (i.e., the 64 bits <span class="arithmatex">\(\{\mathtt{Bit}[0,0,z]\}\)</span> where <span class="arithmatex">\(0\leq z \leq 63\)</span>).</p>
+<p><strong>Here's how <span class="arithmatex">\(\large{\iota}\)</span> operates on the origin lane, <span class="arithmatex">\(\{\mathtt{Bit}[0,0,z]\ |\ 0\leq z \leq 63\}\)</span></strong>. </p>
+<p>Firstly, the derivation of the round-constants <span class="arithmatex">\(RC[ir]\)</span>. As shown in the algorithm of <span class="arithmatex">\(\large{\iota}\)</span>, given below, the round-constant <span class="arithmatex">\(RC\)</span> is initialised to <span class="arithmatex">\(0^{w}\)</span> at the beginning of each round of <span class="arithmatex">\(\large{\iota}\)</span>. After which, 7 specific bit-places <span class="arithmatex">\(\{2^j – 1\ |\ 0 \leq j \leq 6 \}\)</span> of the round-constant are set to the bits <span class="arithmatex">\(\{rc[j + 7 ir]\ |\ 0 \leq j \leq 6 \}\)</span>. Meanwhile, the rest of the bits remain as zeros. </p>
+<div align="center"><b> Table 6: Mapping RC[ir] bit-places to indices of the set 7 bits </b></div>
+
+<div class="arithmatex">\[
+\begin{array}{|l|c|c|c|c|c|c|}
+\hline
+\mathtt{j} &amp; \mathtt{2^j - 1} &amp; \mathtt{j + 7ir}\\ \hline
+0 &amp; 0 &amp; 0 + 7\mathtt{ir}\\ \hline
+1 &amp; 1 &amp; 1 + 7\mathtt{ir}\\ \hline
+2 &amp; 3 &amp; 2 + 7\mathtt{ir}\\ \hline
+3 &amp; 7 &amp; 3 + 7\mathtt{ir}\\ \hline
+4 &amp; 15 &amp; 4 + 7\mathtt{ir}\\ \hline
+5 &amp; 31 &amp; 5 + 7\mathtt{ir}\\ \hline
+6 &amp; 63 &amp; 6 + 7\mathtt{ir}\\ \hline
+\end{array}
+\]</div>
+<p>The derivation of the 7 bits, <span class="arithmatex">\(\{rc[j + 7 ir]\}\)</span>, is explained below.</p>
+<p>Secondly, each round of <span class="arithmatex">\(\large{\iota}\)</span> simply XORes the corresponding 64-bit round-constant to the 64-bit lane, <span class="arithmatex">\(\{\mathtt{Bit}[0,0,z]\ |\ 0\leq z \leq 63 \}\)</span>. Since only 7 bits of the round-constant are set, each round of <span class="arithmatex">\(\large{\iota}\)</span> therefore alters at most 7 bits of origin lane.</p>
+<div class="arithmatex">\[
+\textbf{Algorithm: Keccak-f Iota Mapping}
+\text{} \\
+\textbf{Input: }\text{ state array }\mathbf{ A }\text{, round index } ir \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ } \\
+\textbf{Output:}\text{ state array }\mathbf{ A'}\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{} \\
+\text{Steps:}\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ } \\
+\text{ 1. For all triples } (x, y, z) \text{ such that } 0 ≤ x &lt;5, 0 ≤ y &lt; 5,\\ 
+\text{ and } 0 ≤ z &lt; w, \text{ let } \mathbf{A'}[x, y, z] = \mathbf{A}[x, y, z]\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\\
+\text{2. Let } RC = 0^w. \text{ } \ \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\\
+\text{3. For } j \text{ from } 0 \text{ to } l, \text{ let } RC[2^j – 1] = rc[j + 7 ir]. \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\\
+\text{4. For all } z \text{ such that } 0 ≤ z &lt;w,\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ } \\ 
+\text{ let } \mathbf{A'} [0, 0, z] = \mathbf{A'}[0, 0, z] \bigoplus RC[z].\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ } \\
+\text{5. Return } A' \text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }\text{ }
+\]</div>
+<p>In our implementation <span class="arithmatex">\(l = 6\)</span>, and thus <span class="arithmatex">\(w = 2^6 = 64\)</span>. </p>
+<p>The code of the <span class="arithmatex">\(\large{\iota}\)</span> step mapping is found here <a href="https://github.com/0xPolygonHermez/zkevm-prover/blob/main/tools/sm/keccak_f/keccak_iota.cpp">keccak_iota.cpp</a>.</p>
+<h3 id="generation-of-7-bits-for-round-constants">Generation of 7 Bits for Round-Constants</h3>
+<p>In order to ensure that these round-constants differ from round-to-round, a linear feedback shift register (LFSR) of maximal length is used to generate them. The algorithm for generating these round-constants is given below.</p>
+<p>The LFSR can run for 255 clocks before resetting to <span class="arithmatex">\(0\)</span>, and has 8 registers; <span class="arithmatex">\(R[0],R[1],R[2],R[3],R[4],R[5],R[6],R[7]\)</span>. </p>
+<p>At <span class="arithmatex">\(t = 0\)</span>, it is initialised to <span class="arithmatex">\(\mathtt{10000000 = 0x80}\)</span>. A state transition (or a shift) consists of;</p>
+<p>​   (a) A push of a bit <span class="arithmatex">\(0\)</span> into the first register <span class="arithmatex">\(R[0]\)</span> while shifting the bit in register <span class="arithmatex">\(R[i]\)</span> to <span class="arithmatex">\(R[(i+1)\text{ mod }8]\)</span> for each <span class="arithmatex">\(i\)</span> , where <span class="arithmatex">\(0 \leq i \leq 7\)</span>.</p>
+<p>​   (b) XOR of the bit from register <span class="arithmatex">\(R[8]\)</span> with register <span class="arithmatex">\(R[0]\)</span>.</p>
+<p>​   (c) XOR of the bit from register <span class="arithmatex">\(R[8]\)</span> with register <span class="arithmatex">\(R[4]\)</span>.</p>
+<p>​   (d) XOR of the bit from register <span class="arithmatex">\(R[8]\)</span> with register <span class="arithmatex">\(R[5]\)</span>.</p>
+<p>​   (e) XOR of the bit from register <span class="arithmatex">\(R[8]\)</span> with register <span class="arithmatex">\(R[6]\)</span>.</p>
+<p>​   (f) Output the bit in the first register <span class="arithmatex">\(R[0]\)</span> as <span class="arithmatex">\(rc[j+7ir]\)</span>.</p>
+<p>After every 7 consecutive state transitions the LFSR produces enough bits to form the corresponding round-constant <span class="arithmatex">\(RC[ir]\)</span>. The 7 bits map to their bit places in <span class="arithmatex">\(RC[ir]\)</span> according to Table 6 above. </p>
+<p><img alt="The 7 rc bits LFSR" src="../figures/05kkf-iota-rc-bits-lfsr.png" /></p>
+<p><div align="center"><b> Figure 5: A simplified LFSR for the rc[j+7ir] bits </b></div></p>
+<p><strong>Example 2</strong>.</p>
+<p>Since the LFSR is initialised to <span class="arithmatex">\(\mathtt{10000000 = 0x80}\)</span> at <span class="arithmatex">\(t = 0\)</span>, its state at the end of 7 state transitions is <span class="arithmatex">\(|0|0|0|0|0|0|0|1|\)</span>. So <span class="arithmatex">\(rc[7] = 0\)</span>. After the 8-th state transition the state of the LFSR is <span class="arithmatex">\(|1|0|0|0|1|1|1|0|\)</span>, and thus <span class="arithmatex">\(rc[8] = 1\)</span>. The next table displays generation of the 7 bits needed to construct the second round-constant, <span class="arithmatex">\(RC[1]\)</span>. That is, the LFSR's state transitions for <span class="arithmatex">\(t = 7\)</span> to <span class="arithmatex">\(t = 13\)</span>.</p>
+<div align="center"><b> Table 7: Generation of the 7 bits for the second round-constant RC[1] </b></div>
+
+<div class="arithmatex">\[
+\small
+\begin{array}{|l|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\text{ }\texttt{t} &amp; \texttt{R[0]} &amp; \texttt{R[1]} &amp; \texttt{R[2]} &amp; \texttt{R[3]} &amp; \texttt{R[4]} &amp; \texttt{R[5]} &amp; \texttt{R[6]}  &amp; \texttt{R[7]} &amp; \text{} &amp; \texttt{j} &amp; \texttt{rc[j+7]} &amp; \mathtt{2^j-1} &amp; \mathtt{RC[1][2^j-1]} \\ \hline
+\text{ }7 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; \text{} &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\ \hline
+\text{ }8 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; \text{} &amp; 1 &amp; 1 &amp; 1 &amp; 1 \\ \hline
+\text{ }9 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; \text{} &amp; 2 &amp; 0 &amp; 3 &amp; 0 \\ \hline
+10 &amp; 1 &amp; 0 &amp; 1 &amp; 0 &amp; 1 &amp; 1 &amp; 0 &amp; 1 &amp; \text{} &amp; 3 &amp; 1 &amp; 7 &amp; 1 \\ \hline
+11 &amp; 1 &amp; 1 &amp; 0 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; \text{} &amp; 4 &amp; 1 &amp; 15 &amp; 1 \\ \hline
+12 &amp; 0 &amp; 1 &amp; 1 &amp; 0 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; \text{} &amp; 5 &amp; 0 &amp; 31 &amp; 0 \\ \hline
+13 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 0 &amp; 1 &amp; 1 &amp; 0 &amp; \text{} &amp; 6 &amp; 0 &amp; 63 &amp; 0 \\ \hline
+\end{array}
+\]</div>
+<p>It can be observed, on the right-hand side of Table 7, that the <span class="arithmatex">\(\mathtt{rc[j+7]}\)</span> and <span class="arithmatex">\(\mathtt{RC[1][2^j - 1]}\)</span> are the same. That is,</p>
+<div class="arithmatex">\[
+\begin{aligned}
+RC[1][63] = 0 = rc[13],\text{ } RC[1][31] = 0 = rc[12],\text{ } RC[1][15] = 1 = rc[11],\\
+RC[1][7] = 1 = rc[10], \text{ } RC[1][3] = 0 = rc[9], \text{ } RC[1][1] = 1 = rc[8],\qquad \\ 
+RC[1][0] = 0 = rc[7] \text{ and }\
+RC[1][l] = 0\ \text{ for all }\ l \notin \{ 0, 1, 3, 7, 15, 31, 63 \}\text{ }\\
+\end{aligned}
+\]</div>
+<p>This results in the round-constant,</p>
+<div class="arithmatex">\[
+\begin{aligned}
+RC[1] = RC[1][63]\ RC[1][62]\ RC[1][61]\ \dots\ RC[1][3]\ RC[1][2]\ RC[1][1]\ RC[1][0]\\
+RC[1] = 0b0000 0000\ 0000 0000\ \dots\ 1000 0000\ 1000 1010 \qquad\qquad\qquad\qquad\quad\quad\text{ }\text{ } \\
+RC[1] = \mathtt{0x0000000000008082} \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\text{ }\text{ }
+\end{aligned}
+\]</div>
+<p>All 24 round constants <span class="arithmatex">\(RC[i]\)</span>, where each is <span class="arithmatex">\(64\)</span> bits long, are given in their hexadecimal format below.</p>
+<p><img alt="Figure 6: The 24 Round Constants in Hexadecimal" src="../figures/06kkf-all-24-rc-hex.png" /></p>
+<div align="center"><b> Figure 6: The 24 Round Constants in Hexadecimal </b></div>
+
+<p>The C++ code for the LFSR is found in the zkEVM prover repository here <a href="https://github.com/0xPolygonHermez/zkevm-prover/blob/main/tools/sm/keccak_f/keccak_rc.cpp">keccak_rc.cpp</a>. </p>
+<p>All these step mappings are consolidated in the <a href="https://github.com/0xPolygonHermez/zkevm-prover/blob/main/tools/sm/keccak_f/keccak_f.cpp">keccakf.cpp</a> code, which calls them as functions (see Table 2 above).</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://t.me/polygonhermez" target="_blank" rel="noopener" title="t.me" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M248 8C111.033 8 0 119.033 0 256s111.033 248 248 248 248-111.033 248-248S384.967 8 248 8Zm114.952 168.66c-3.732 39.215-19.881 134.378-28.1 178.3-3.476 18.584-10.322 24.816-16.948 25.425-14.4 1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25 5.342-39.5 3.652-3.793 67.107-61.51 68.335-66.746.153-.655.3-3.1-1.154-4.384s-3.59-.849-5.135-.5q-3.283.746-104.608 69.142-14.845 10.194-26.894 9.934c-8.855-.191-25.888-5.006-38.551-9.123-15.531-5.048-27.875-7.717-26.8-16.291q.84-6.7 18.45-13.7 108.446-47.248 144.628-62.3c68.872-28.647 83.183-33.623 92.511-33.789 2.052-.034 6.639.474 9.61 2.885a10.452 10.452 0 0 1 3.53 6.716 43.765 43.765 0 0 1 .417 9.769Z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hermeznetwork/zkevmdoc" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://hermez.io/" target="_blank" rel="noopener" title="hermez.io" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 3.75C0 2.784.784 2 1.75 2h20.5c.966 0 1.75.784 1.75 1.75v16.5A1.75 1.75 0 0 1 22.25 22H1.75A1.75 1.75 0 0 1 0 20.25ZM22.5 7h-21v13.25c0 .138.112.25.25.25h20.5a.25.25 0 0 0 .25-.25Zm-10-3.5v2h10V3.75a.25.25 0 0 0-.25-.25ZM7 3.5v2h4v-2Zm-5.25 0a.25.25 0 0 0-.25.25V5.5h4v-2Z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.tracking"], "search": "../../../../../../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../../../assets/javascripts/bundle.4b2c34cd.min.js"></script>
+      
+        <script src="../../../../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
