@@ -143,7 +143,7 @@ Below is a summary of the structure of how Sequencers and Aggregators are incent
 - Receives fees from the published transactions
 - Pays L1 transaction fees + MATIC (depends on pending batches)
 - MATIC goes to Aggregators
-- Profitable if: `txs fees` > `L1 call` + `MATIC` fee
+- Profitable if: `txs fees` > `L1 call` + `MATIC fee`
 
 
 
